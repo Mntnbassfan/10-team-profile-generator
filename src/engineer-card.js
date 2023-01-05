@@ -19,7 +19,7 @@ const engineerCard = (profile) => `
 
 // display ID
           <span class="font-weight-bold">Employee ID: </span>
-          ${profile.getID()}
+          ${profile.getId()}
         </li>
         <li class="list-group-item">
 

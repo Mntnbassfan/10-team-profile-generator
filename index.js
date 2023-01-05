@@ -41,6 +41,8 @@ function createGroup() {
         case "Intern":
           createIntern();
           break;
+        default:
+          initialize();
       }
     });
 }
@@ -159,7 +161,10 @@ function createIntern() {
 createGroup();
 
 function generateHTML() {
-  var html = '';
+  var html = "";
+
+  console.log(groupArray);
+  
   for (let i = 0; i < groupArray.length; i++) {
     let employee = groupArray[i];
     if (employee.getRole() === "Manager") {
@@ -181,21 +186,15 @@ function generateHTML() {
   <body>
   <div class="jumbotron jumbotron-fluid">
   <div class="container">
-      ${
-html
-      }
+      ${html}
   </body>
-  </html>`
+  </html>`;
 }
 
 // use writeFileSync as a promise
 const initialize = () => {
-  promptUser()
     // Use writeFile method imported from fs.promises to use promises instead of
     // a callback function
-    .then((answers) => writeFile('index.html', generateHTML(answers)))
-    .then(() => console.log('Wrote to index.html'))
-    .catch((err) => console.error(err));
+    fs.writeFileSync(outputPath, generateHTML(), 'utf-8')
+    console.log("Wrote to index.html")
 };
-
-initialize();

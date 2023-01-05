@@ -7,19 +7,31 @@ const path = require("path");
 const fs = require("fs");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
-const outputPath = (OUTPUT_dir, "group.html");
+const outputPath = (OUTPUT_DIR, "group.html");
 
-groupArray = [];
+let groupArray = [];
+const engineerCard = require("./src/engineer-card");
+const managerCard = require("./src/manager-card");
+const internCard = require("./src/intern-card");
 
 // create group function
-function createGroup () {
-    inquirer.prompt([{
-      type: "list",
-      message: "Which kind of employee do you want to add?",
-      name: "addEmployee",
-      choices: ["Manager", "Engineer", "Intern", "No more team members are needed."]
-    }]).then(function (userInput) {
-      switch(userInput.addEmployee) {
+function createGroup() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "Which kind of employee do you want to add?",
+        name: "addEmployee",
+        choices: [
+          "Manager",
+          "Engineer",
+          "Intern",
+          "No more team members are needed.",
+        ],
+      },
+    ])
+    .then(function (userInput) {
+      switch (userInput.addEmployee) {
         case "Manager":
           createManager();
           break;
@@ -30,8 +42,8 @@ function createGroup () {
           createIntern();
           break;
       }
-    })
-  }
+    });
+}
 
 // manager input
 function createManager() {
@@ -66,6 +78,7 @@ function createManager() {
         manager.officeNumber
       );
       groupArray.push(newManager);
+      createGroup();
     });
 }
 
@@ -102,6 +115,7 @@ function createEngineer() {
         engineer.github
       );
       groupArray.push(newEngineer);
+      createGroup();
     });
 }
 
@@ -138,7 +152,50 @@ function createIntern() {
         intern.github
       );
       groupArray.push(newIntern);
+      createGroup();
     });
 }
 
-createGroup;
+createGroup();
+
+function generateHTML() {
+  var html = '';
+  for (let i = 0; i < groupArray.length; i++) {
+    let employee = groupArray[i];
+    if (employee.getRole() === "Manager") {
+      html += managerCard(employee);
+    } else if (employee.getRole() === "Engineer") {
+      html += engineerCard(employee);
+    } else if (employee.getRole() === "Intern") {
+      html += internCard(employee);
+    }
+  }
+  return `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+  </head>
+  <body>
+  <div class="jumbotron jumbotron-fluid">
+  <div class="container">
+      ${
+html
+      }
+  </body>
+  </html>`
+}
+
+// use writeFileSync as a promise
+const initialize = () => {
+  promptUser()
+    // Use writeFile method imported from fs.promises to use promises instead of
+    // a callback function
+    .then((answers) => writeFile('index.html', generateHTML(answers)))
+    .then(() => console.log('Wrote to index.html'))
+    .catch((err) => console.error(err));
+};
+
+initialize();

@@ -33,6 +33,6 @@ THEN I exit the application, and the HTML is generated
 ## Walkthrough Video
 
 ...
-https://drive.google.com/file/d/1OYtgzDQQxaf72Z7m_jVMkRSnOtzzBWwr/view
+https://drive.google.com/file/d/11ysuW4brRs_Y75S-HsPA7zkyscsH2L1E/view
 ...
 
